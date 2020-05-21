@@ -6,21 +6,33 @@ var app = new Vue({
     message: ''
   },
 
+  watch:{
+    keyword: function(newKeyword, oldKeyword){
+      // console.log(newKeyword)
+      this.message = 'Waiting for you to stop typing...'
+      this.debouncedGetAnswer()
+    }
+  },
+
+
   created: function() {
     // mountedと機能は同じだがdomを取得しないのであればこちらの方が早い
     // axios.get('https://qiita.com/api/v2/schema?locale=ja')
-    this.keyword = 'JavaScript'
-    this.getAnswer()
+    // this.keyword = 'JavaScript'
+    // this.getAnswer()
     // 関数のため()が必要
+    this.debouncedGetAnswer = _.debounce(this.getAnswer, 1000)
+    // 数値は秒数をミリ秒で記述している
+    // 記述した時間の間は同じ処理を無視する
     
   },
-  watch:{
-    
-  },
+
+
   methods:{
     getAnswer: function(){
       if (this.keyword === '') {
         this.items = null
+        this.message = ''
         return
       }
       
